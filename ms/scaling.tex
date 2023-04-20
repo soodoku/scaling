@@ -8,12 +8,12 @@
 
 \usepackage[margin=1in]{geometry}
 \usepackage[linkcolor=black,
-			colorlinks=true,
-			urlcolor=black,
-			pdfstartview={XYZ null null 1.00},
-			pdfpagemode=UseNone,
-			citecolor={black},
-			pdftitle={piranhas}]{hyperref}
+            colorlinks=true,
+            urlcolor=black,
+            pdfstartview={XYZ null null 1.00},
+            pdfpagemode=UseNone,
+            citecolor={black},
+            pdftitle={scaling}]{hyperref}
 
 \usepackage[resetlabels,labeled]{multibib}
 \newcites{SI}{SI References}
@@ -27,12 +27,12 @@
 \usepackage{amsxtra}
 \usepackage{verbatim}
 \setcitestyle{round,semicolon,aysep={},yysep={;}}
-\usepackage{setspace}		     % Permits line spacing control. Options are \doublespacing, \onehalfspace
-\usepackage{sectsty}		     % Permits control of section header styles
+\usepackage{setspace}            % Permits line spacing control. Options are \doublespacing, \onehalfspace
+\usepackage{sectsty}             % Permits control of section header styles
 \usepackage{pdflscape}
-\usepackage{fancyhdr}		     % Permits header customization. See header section below.
+\usepackage{fancyhdr}            % Permits header customization. See header section below.
 \usepackage{url}                     % Correctly formats URLs with the \url{} tag
-\usepackage{fullpage}		%1-inch margins
+\usepackage{fullpage}       %1-inch margins
 \usepackage{multirow}
 \usepackage{rotating}
 \setlength{\parindent}{3em}
@@ -117,9 +117,8 @@ Given the cost structure and cost rationalization opportunities, we split the va
                 \item \textbf{Memory.} The GPU memory required to load an ML model to make predictions on the target deployment platform can be affected by numerical precision, e.g., fp32, fp16, int8, the number of parameters in a model, etc. Memory requirements affect the cost for two reasons. Memory costs money. For instance, with a fixed number of FLOPs, a GPU with larger memory costs more. Second, memory can be seen as a constraint on the deployment options that are available. For instance, if the model cannot fit an on-premise device, a GPU, or a VM, you have to go with the cloud, a pricier GPU, and a pricier VM respectively.
                 \item \textbf{Compute.} The total number of MAC or FLOPs needed for making a prediction. It is a function of the model capacity (the depth and the width of the network). 
         \end{itemize}
+           We can reduce the model's memory and compute footprint using techniques like Knowledge Distillation \citep{hinton2015distilling}, Quantization, Graph surgery, TensorRT, etc. But it is useful to not assume the impact of these methods on latency. We have encountered cases where model distillation reduced the number of parameters by 500x but still increased the latency because of the sequence and the nature of the calls.
     \end{enumerate}
-
-    We can reduce the model's memory and compute footprint using techniques like Knowledge Distillation \citep{hinton2015distilling}, Quantization, Graph surgery, TensorRT, etc. But it is useful to not assume the impact of these methods on latency. We have encountered cases where model distillation reduced the number of parameters by 500x but still increased the latency because of the sequence and the nature of the calls.
 
     \item \textbf{Bandwidth costs.} The cost of shuttling data for audio-visual applications can be substantial. Shuttling data generally also means greater latency and lower reliability. The standard ways of reducing bandwidth costs include compression and downsampling. For instance, the resolution of a frame that is needed for accurate prediction may be lower than the resolution at which the image or video is captured.
 
@@ -156,45 +155,45 @@ The five most common infrastructure-related mistakes that startups make are:
 
 \end{itemize}
 
-\subsection{Developer costs}
+\subsubsection{Developer costs}
 
 Developer costs can be split into three kinds of costs:
 \begin{itemize}
-    \item The cost of engineers. All else equal, the number of engineers required to serve the customers at a particular quality grows sharply with the diversity, volume, and velocity of the data. The only way to reduce the slope of the function is by increasing the maturity of the infrastructure and paying down the technical debt. Till the second stage, reducing the slope may not be optimal but in the third stage, it becomes sine-qua-non.
+    \item \textbf{The cost of engineers.} All else equal, the number of engineers required to serve the customers at a particular quality grows sharply with the diversity, volume, and velocity of the data. The only way to reduce the slope of the function is by increasing the maturity of the infrastructure and paying down the technical debt. Till the second stage, reducing the slope may not be optimal but in the third stage, it becomes sine-qua-non.
 
 The cost of engineering churn. The cost is a sum of two costs:
 \begin{itemize}
-    \item The cost of losing tribal knowledge. At startups, many critical pieces of how the system works reside within people and good documentation is generally unavailable. Losing an engineer means losing a lot of the context which makes development much slower and also means that engineers have to relearn the same lessons which can be expensive (and time-consuming). Given that startups cannot often afford redundancy—multiple engineers responsible for the same piece of code—in the extremum, an engineer leaving can have dramatic consequences for the maintenance of a particular feature. 
+    \item  \textbf{The cost of losing tribal knowledge.} At startups, many critical pieces of how the system works reside within people and good documentation is generally unavailable. Losing an engineer means losing a lot of the context which makes development much slower and also means that engineers have to relearn the same lessons which can be expensive (and time-consuming). Given that startups cannot often afford redundancy—multiple engineers responsible for the same piece of code—in the extremum, an engineer leaving can have dramatic consequences for the maintenance of a particular feature. 
 
-    \item Hiring costs. Hiring is expensive and time-consuming. It costs the remaining engineers interview time. It means generally that the company has access to one less engineer so the delivery speed is slower than what is optimal. It also includes the cost of ramping up another engineer.  Add to all of this the fact that all else equal, losing an engineer increases the odds of another engineer leaving. 
+    \item \textbf{Hiring costs.} Hiring is expensive and time-consuming. It costs the remaining engineers interview time. It means generally that the company has access to one less engineer so the delivery speed is slower than what is optimal. It also includes the cost of ramping up another engineer.  Add to all of this the fact that all else equal, losing an engineer increases the odds of another engineer leaving. 
 \end{itemize}
 
 There are many reasons for regrettable engineering churn. Aside from compensation, and the conditions in the wider job market, some engineers leave because of poor quality of life. Some common aspects of startup life—the amount of work, frequent reorganizations, and frequent movement across workstreams—make working at a startup more unpleasant. Beyond that, as the company moves to the third stage, engineers can be increasingly stuck fixing bugs if the company has not paid down the technical debt. And it is a canon among engineers that fixing bugs is not as satisfying as building new features. Engineers also generally think it is particularly unappealing to fix other people’s bugs and to fix ‘simple’ bugs that come with a large overhead. Because of these reasons, for many engineers, the more time spent fixing bugs, the less pleasant the job. The time devoted to fixing bugs is some function of the quality of the code and infrastructure, and the quality of tools used to root cause errors. For all of these reasons, paying down technical debt should be moved forward. We discuss how to think about technical debt in the next section.
 
-\item The cost of lower product quality. The cost of a lower-quality product is customer churn, poor reputation, and lower sales. One measure of product quality is the number of customer complaints (multiplied by their impact—often crudely coded into simple categories, e.g., high, medium, and low—and the time for which they remain unsolved) that stem from bugs. This metric has the virtue of aligning quality in ways that are important to the customer. It is also conventional to add uptime as a KPI. 
+\item \textbf{The cost of lower product quality.} The cost of a lower-quality product is customer churn, poor reputation, and lower sales. One measure of product quality is the number of customer complaints (multiplied by their impact—often crudely coded into simple categories, e.g., high, medium, and low—and the time for which they remain unsolved) that stem from bugs. This metric has the virtue of aligning quality in ways that are important to the customer. It is also conventional to add uptime as a KPI. 
 
 Nearly all software ships with bugs and often the bugs are known—the bugs are there because of agreed-upon trade-offs, which often go undocumented. So when using data on bugs to make a decision about whether or not to invest in operational excellence, it is useful to focus on unanticipated bugs.
 
 In our experience, the number of unanticipated bugs is weakly related to conventional code quality metrics, e.g., the extent of logging, the number and coverage of tests, the quality of documentation, etc. The largest predictor is the quality of engineers and oversight.   
 
-\item The cost of lower development velocity. The consequences of a lower cadence of feature delivery and longer times to deploy to a new site or customer are stark—poorer sales and greater cash burn (and the associated risk of running out of money). The conventional metrics for tracking this problem are
-
-\item The frequency of releases (or the rate of feature delivery, pro-rated for complexity). Many big engineering problems eventually cause the release cadence to become slower. The rate of production needs to be broken down into its own input metrics. For instance, are machine learning engineers spending most of their time wrangling data? Is a lack of data versioning what is causing the release process to fail?
-
-\item The time to release to a new customer or site. Over time, we expect this metric to sharply come down. This is a metric that needs to be broken down and understood for scaling.
-
+\item \textbf{The cost of lower development velocity.} The consequences of a lower cadence of feature delivery and longer times to deploy to a new site or customer are stark—poorer sales and greater cash burn (and the associated risk of running out of money). The conventional metrics for tracking this problem are
+    \begin{itemize}
+        \item \textbf{The frequency of releases.} (Or the rate of feature delivery, pro-rated for complexity). Many big engineering problems eventually cause the release cadence to become slower. The rate of production needs to be broken down into its own input metrics. For instance, are machine learning engineers spending most of their time wrangling data? Is a lack of data versioning what is causing the release process to fail?
+    
+    \item \textbf{The time to release to a new customer or site.} Over time, we expect this metric to sharply come down. This is a metric that needs to be broken down and understood for scaling. 
+    \end{itemize}
 \end{itemize}
 
-\subsection{Technical Debt}
+\subsubsection{Technical Debt}
 Startups are financed by technical debt. It is generally imprudent to aim for zero technical debt. The level at which you engineer solutions should reflect the needs and constraints of the time. For instance, if you are testing your ETAs for a route planning algorithm in a second-stage company, you may write a script against Google map routing. Eventually, as the needs evolve, you may want to write a class or add the ability to query other mapping services. Similarly, at the start of some ML projects where the data generation process is expected to not change,  it may not be useful to monitor performance against fresh samples as designing and maintaining such systems is expensive. Instead, like other engineering solutions, e.g., regular-expression-based systems, it may be reasonable to rely on customer complaints as a way to flag problems. On the flip side, it pays to take on the right kind of debt and pay down the high-interest debt. So how do we think about which technical debt should be paid down first? The core principles are:
 \begin{itemize}
     \item \textbf{Pay down the most expensive debt first.} The cost can be customer value or the cost of maintenance.
     \item \textbf{Solving upstream technical debt is generally more important than downstream technical debt.} In ML, paying down data quality issues is better than building solutions to deal with data quality in the model. For instance, fixing sensors or their integration to get better data often provides a higher return on investment.
 \end{itemize}
 
-Not all technical debt is a result of engineering to the needs or constraints of the time. A lot of it is plain bad engineering practices. Debt avoided is money saved. Following the meta engineering principles for writing maintainable software, software that is easily operable, e.g., easy to troubleshoot and run, simple, e.g., which can be achieved through abstraction, etc., can save a lot of money.
+Not all technical debt is a result of engineering to the needs or constraints of the time. A lot of it is plain bad engineering practices. Debt avoided is money saved. Following the meta engineering principles for writing maintainable software, software that is easily operable, e.g., easy to troubleshoot and run, simple, e.g., which can be achieved through abstraction, etc., can save a lot of money. 
 
-\section{Maintaining Performance Over Time (and Space)}
+\section{Maintaining Performance}
 Maintaining performance over time is a three-step process: 1. defining and monitoring performance, 2. root-causing failures, and 3. finding and deploying the fixes. The last part is too problem specific so we limit our discussion to the first two points.
 
 \subsection{Defining and Tracking Performance}
@@ -231,7 +230,7 @@ Models fail for six broad conceptual reasons:
    \item  \textbf{Interpolation error.} Interpolation error stems from two sources—(local) underfitting and (local) overfitting. There are multiple sources of interpolation errors. First, cross-validation, the primary tool we use to prevent overfitting is too crude a tool to prevent local overfitting. Generally, the model losses are too insensitive to local overfitting and underfitting across narrow slices of data. The second source of issues is model capacity. If you have a linear model and the true function is quadratic, it will lead to an interpolation error. One of the solutions to both local overfitting and underfitting is to get more data. To fix underfitting to the data, it is helpful to increase model capacity. 
 \end{enumerate}
 
-\subsection{Detecting Model Problems}
+\subsubsection{Detecting Model Problems}
 Like other logic built on the assumption that data distribution is stationary, e.g., Regex, machine learning applications can fail silently. Any change in the data-generating process needn't affect the business metrics or indeed even the model's topline metrics but it is useful to be aware of the shifts. Here are some ways to measure the consequences of changes in the data-generating process: 
 \begin{enumerate}
 
@@ -249,12 +248,10 @@ Like other logic built on the assumption that data distribution is stationary, e
 
 \subsection{Tools}
 
-You need different tools at different scales. For instance, you rarely invest in internal tools at the first stage. In the second stage, you focus on tools that help you dive deep into the product vertical you are trying to capture, e.g., an AV company, which has completed a successful POC on a single state highway, will likely invest in data exploration tools to solve L4 automation for all US highways. However, once you surpass the second stage, you need a way to store, represent, and visualize the data in a more indexable manner. Typically, you need a feature store to not just capture the variance within data, but also be able to replicate model degradation on a consistently large set of input data which grows as you capture more data distribution that the model represents. It is a more structured way of versioning the input/output of each subsystem of your pipeline and has a way to compare changes to the entire pipeline while changing one component \citep{sculley2015hidden}. The same applies to compute, deployment, and other components that were discussed earlier in the paper. 
+Different tools are needed for different scales. For instance, companies rarely invest in internal tools at the first stage. In the second stage, companies focus on tools that help you dive deep into the product vertical you are trying to capture, e.g., an AV company, which has completed a successful POC on a single state highway will likely need to invest in data exploration tools to solve L4 automation for all US highways. However, once companies surpass the second stage, they need a way to store, represent, and visualize the data in a more indexable manner. Typically, you need a feature store to not just capture the variance within data, but also to be able to replicate model degradation on a large, growing set of input data.
 
-\subsection{Improving ML Products}
-Beyond 'failures' are optimization opportunities. One way to look at them is from the standard statistical process control perspective. For instance, what causes variability in latency in one part of the system is a useful learning opportunity. Another way to look at it is through the perspective of experimentation. 
-Using new data can cause predictions to become worse. Defining a Pareto improving release or .  Check against slices of data or aim for a distributionally robust loss function \citep{duchi2023distributionally}.
-
+\section{Conclusion}
+Scaling startups is hard. Challenges unique to machine learning make scaling machine learning startups harder. In this paper, we provide a framework for thinking about costs and highlight some cost saving opportunities. We also outline ways to think about one of the most expensive portions of machine learning---root causing problems. 
 
 \newpage
 \bibliographystyle{apsr}
